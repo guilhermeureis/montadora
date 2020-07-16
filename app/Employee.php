@@ -10,4 +10,9 @@ class Employee extends Model
     use SoftDeletes;
 
     protected $table = 'employees';
+
+    public function branch()
+    {
+        return $this->belongsTo('App\Branch');
+    }
 }
