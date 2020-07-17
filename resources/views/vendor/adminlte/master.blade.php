@@ -86,6 +86,8 @@
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
 
+    <script src="//unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 </body>
 
 </html>

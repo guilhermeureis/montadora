@@ -4,9 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class BranchController extends Controller
 {
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:100',
+            'full_address' => 'required|max:100',
+            'state_registration' => 'required|max:30',
+            'cnpj' => 'required|max:20|formato_cnpj',
+        ]);
+    }
 
     /**
      * Create a new controller instance.
@@ -46,8 +58,16 @@ class BranchController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {  
+        $this->validator($request->all())->validate();
+        $branches = new Branch();
+        $branches->name = $request->name;
+        $branches->full_address = $request->full_address;
+        $branches->state_registration = $request->state_registration;
+        $branches->cnpj = $request->cnpj;
+        $branches->save();
+
+        return response()->json();
     }
 
     /**
@@ -67,9 +87,10 @@ class BranchController extends Controller
      * @param  \App\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function edit(Branch $branch)
+    public function edit($id)
     {
-        //
+        $branch = Branch::findOrFail($id);
+        return view('branches.edit', compact('branch'));
     }
 
     /**
@@ -79,9 +100,17 @@ class BranchController extends Controller
      * @param  \App\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Branch $branch)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validator($request->all())->validate();
+        $branches = Branch::findOrFail($id);
+        $branches->name = $request->name;
+        $branches->full_address = $request->full_address;
+        $branches->state_registration = $request->state_registration;
+        $branches->cnpj = $request->cnpj;
+        $branches->save();
+
+        return response()->json();
     }
 
     /**
@@ -90,8 +119,10 @@ class BranchController extends Controller
      * @param  \App\Branch  $branch
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Branch $branch)
+    public function destroy($id)
     {
-        //
+        $branch = Branch::findOrFail($id);
+        $branch->delete();
+        return response()->json();
     }
 }

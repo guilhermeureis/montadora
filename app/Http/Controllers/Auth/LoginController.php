@@ -137,7 +137,6 @@ class LoginController extends Controller
     }
 
     protected function checkInactive(Request $request, $user){
-        Log::info($user);
         if($user->status) {
             return false;    
         }

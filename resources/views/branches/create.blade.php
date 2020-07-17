@@ -13,7 +13,7 @@
        <div class="card-header">
           <h3 class="card-title">Filial</h3>
        </div>
-       <form role="form">
+       <form>
           <div class="card-body">
               <div class="row">
                   <div class="col-md-12">
@@ -43,19 +43,109 @@
               </div>
           </div>
           <div class="card-footer">
-             <button type="submit" class="btn btn-primary">Salvar</button>
+             <button type="submit" class="btn btn-primary" id="salvar-branches">Salvar</button>
           </div>
        </form>
+    </div>
+</div>
+
+<div id="carregamento" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h4 class="modal-title bg-dark" id="carregamento">Carregando...</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <img style="width: 240px;height: 125px;" src="{{ asset('images/carrega.gif') }}" class="center">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h4 style="text-align: center;"> Aguarde o Processamento!</h4>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
 @stop
 
 @section('js')
     <script> 
- 
+
+        $(document).ready(function(){
+            $('#cnpj').mask('00.000.000/0000-00', {reverse: true});
+        });
+
+        $('#salvar-branches').on('click',function (e) {
+                
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/branches',
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'name': $("#name").val(),
+                        'full_address': $("#full_address").val(),
+                        'state_registration': $("#state_registration").val(),
+                        'cnpj': $("#cnpj").val()
+                    },
+                    beforeSend: function() {
+                        $('#carregamento').modal('show');
+                    },
+                    success: function() {
+                        $('#carregamento').modal('hide');
+                        swal({
+                            title: "Pronto, aperte OK para continuar!",
+                            text: "Dados foram salvos com sucesso!",
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                location.replace("/branches");
+                            });
+                    },
+                    error: function(data) {
+                        $('#carregamento').modal('hide');
+                        var dados = $.parseJSON(data.responseText);
+                        var erro = "";
+                        console.log(dados);
+
+                        if(typeof dados.errors != "undefined") {
+                            if (dados.errors.name) {
+                                var linha_nova = dados.errors.name.toString();
+                                var linha = linha_nova.replace("O campo nome", "Nome");
+                                erro = erro + "-> " + linha + "\n";
+                            }
+                            if (dados.errors.full_address) {
+                                console.log(dados.errors.full_address.toString());
+                                var linha_nova = dados.errors.full_address.toString();
+                                var linha = linha_nova.replace("O campo full address", "Endereço Completo");
+                                erro = erro + "-> " + linha + "\n";
+                            }
+                            if (dados.errors.cnpj) {
+                                var linha_nova = dados.errors.cnpj.toString();
+                                var linha = linha_nova.replace("O campo cnpj", "CNPJ");
+                                erro = erro + "-> " + linha + "\n";
+                            }
+                            if (dados.errors.state_registration) {
+                                var linha_nova = dados.errors.state_registration.toString();
+                                var linha = linha_nova.replace("O campo state registration", "Registro Estadual");
+                                erro = erro + "-> " + linha + "\n";
+                            }
+                        }
+
+                        swal("Erro",erro, "error");
+                    },
+                });
+            });
     </script>
 @stop
