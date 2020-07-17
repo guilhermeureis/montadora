@@ -3,10 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Automobile;
+use App\Branch;
+use App\Category;
 use Illuminate\Http\Request;
 
 class AutomobileController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +27,8 @@ class AutomobileController extends Controller
      */
     public function index()
     {
-        //
+        $automobiles = Automobile::all();
+        return view('automobiles.index', compact('automobiles'));
     }
 
     /**
@@ -24,7 +38,9 @@ class AutomobileController extends Controller
      */
     public function create()
     {
-        //
+        $branches = Branch::all();
+        $categories = Category::all();
+        return view('automobiles.create', compact('branches','categories'));
     }
 
     /**

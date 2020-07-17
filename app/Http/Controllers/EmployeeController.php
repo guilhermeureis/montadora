@@ -3,10 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Employee;
+use App\Branch;
+use App\Gender;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employee::all();
+        return view('employees.index',compact('employees'));
     }
 
     /**
@@ -24,7 +36,9 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        //
+        $branches = Branch::all();
+        $genders = Gender::all();
+        return view('employees.create', compact('genders','branches'));
     }
 
     /**

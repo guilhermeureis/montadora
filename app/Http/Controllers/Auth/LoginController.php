@@ -73,6 +73,12 @@ class LoginController extends Controller
         }
         
         if ($this->attemptLogin($request)) {
+            $user = $this->guard()->user();
+            if ($this->checkInactive($request, $user)){
+                $this->logout($request);
+                return $this->sendFailedInactive($request);
+            }
+
             return $this->sendLoginResponse($request);
         }
 
@@ -122,5 +128,22 @@ class LoginController extends Controller
                     ? new Response('', 204)
                     : redirect()->intended($this->redirectPath());
     }
+
+    protected function sendFailedInactive(Request $request)
+    {
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.inactive')],
+        ]);
+    }
+
+    protected function checkInactive(Request $request, $user){
+        Log::info($user);
+        if($user->status) {
+            return false;    
+        }
+        return true;
+    }
+
+
 
 }

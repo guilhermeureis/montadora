@@ -15,5 +15,5 @@ return [
 
     'failed' => 'Essas credenciais não correspondem aos nossos registros',
     'throttle' => 'Muitas tentativas de login. Tente novamente em: :seconds segundos.',
-    'expired' => 'O funcionário foi desativado'
+    'inactive' => 'Funcionário inativo.'
 ];

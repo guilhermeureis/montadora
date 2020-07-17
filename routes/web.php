@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/', 'HomeController@index');
 
@@ -24,6 +21,10 @@ Route::get('/', 'HomeController@index');
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+Route::resource('branches', 'BranchController');
+Route::resource('employees', 'EmployeeController');
+Route::resource('automobiles', 'AutomobileController');
 
 
 
