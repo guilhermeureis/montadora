@@ -117,7 +117,6 @@
                         $('#carregamento').modal('hide');
                         var dados = $.parseJSON(data.responseText);
                         var erro = "";
-                        console.log(dados);
 
                         if(typeof dados.errors != "undefined") {
                             if (dados.errors.name) {

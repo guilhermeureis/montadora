@@ -192,7 +192,7 @@
                         url: "branches/" + id,
                         data: {
                             '_token': $('input[name=_token]').val(),
-                            'id' : $("#id_remove").val(),
+                            'id' : id,
                         },
                         success: function() {
                             swal({
@@ -205,22 +205,15 @@
                                 });
                         },
                         error: function(data) {
-                            $('#carregamento').modal('hide');
-                            $('.modal-title').text("");
                             var erro = "Erro ao excluir filial";
                             swal("Erro",erro, "error");
                         },
                     })
                 
                 } else {
-                swal("Cancelado!","Operação cancelada com sucesso!","info");
+                    swal("Cancelado!","Operação cancelada com sucesso!","info");
                 }
-          });
-
-    });
-
-
-    
+          });   
     
     </script>
 @stop

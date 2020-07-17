@@ -3,7 +3,7 @@
 @section('title', 'Novo Automóvel')
 
 @section('content_header')
-    <h1>Novo Automóvel</h1>
+    <h1>Editar Automóvel</h1>
 @stop
 
 @section('content')
@@ -19,16 +19,18 @@
                   <div class="col-md-6">
                     <div class="form-group">
                         <label for="name">Nome</label>
-                        <input type="text" class="form-control" id="name" name="name">
+                        <input type="text" class="form-control" id="name" name="name" value="{{$automobile->name}}">
                      </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Filial</label>
                       <select class="form-control select2" style="width: 100%;" id="branch_id" name="branch_id">
-                        <option value="" selected="selected">Escolha uma opção</option>
+                        <option value="{{$automobile->branch_id}}" selected="selected">{{$automobile->branch->name}}</option>
                             @foreach($branches as $list)
-                                <option value="{{$list->id}}">{{$list->name}}</option>
+                                @if ($list->id != $automobile->branch_id)
+                                    <option value="{{$list->id}}">{{$list->name}}</option>
+                                @endif
                             @endforeach
                       </select>
                     </div>
@@ -36,34 +38,36 @@
                   <div class="col-md-4">
                     <div class="form-group">
                         <label for="year">Ano</label>
-                        <input type="number" class="form-control" id="year" name="year">
+                        <input type="number" class="form-control" id="year" name="year" value="{{$automobile->year}}">
                      </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                         <label for="model">Modelo</label>
-                        <input type="text" class="form-control" id="model" name="model">
+                        <input type="text" class="form-control" id="model" name="model" value="{{$automobile->model}}">
                      </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                         <label for="color">Cor</label>
-                        <input type="text" class="form-control" id="color" name="color">
+                        <input type="text" class="form-control" id="color" name="color" value="{{$automobile->color}}">
                      </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                         <label for="chassi_number">Número do Chassi</label>
-                        <input type="text" class="form-control" id="chassi_number" name="chassi_number">
+                        <input type="text" class="form-control" id="chassi_number" name="chassi_number" value="{{$automobile->chassi_number}}">
                      </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Categoria</label>
                       <select class="form-control select2" style="width: 100%;" id="category_id" name="category_id">
-                        <option value="" selected="selected">Escolha uma opção</option>
+                      <option value="{{$automobile->category_id}}" selected="selected">{{$automobile->category->category}}</option>
                             @foreach($categories as $list)
-                                <option value="{{$list->id}}">{{$list->category}}</option>
+                                @if ($list->id != $automobile->category->id)
+                                    <option value="{{$list->id}}">{{$list->category}}</option>
+                                @endif
                             @endforeach
                       </select>
                     </div>
@@ -71,11 +75,37 @@
               </div>
           </div>
           <div class="card-footer">
-             <button type="submit" class="btn btn-primary" id="salvar-automobiles">Salvar</button>
+             <button type="submit" class="btn btn-primary" data-id="{{$automobile->id}}" id="editar-automobiles">Editar</button>
           </div>
        </form>
     </div>
 </div>
+
+<div id="carregamento" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h4 class="modal-title bg-dark" id="carregamento">Carregando...</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <img style="width: 240px;height: 125px;" src="{{ asset('images/carrega.gif') }}" class="center">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <h4 style="text-align: center;"> Aguarde o Processamento!</h4>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('css')
@@ -84,11 +114,12 @@
 
 @section('js')
     <script> 
-        $('#salvar-automobiles').on('click',function (e) {
+        $('#editar-automobiles').on('click',function (e) {
             e.preventDefault();
+            var id = $(this).data('id');
             $.ajax({
-                    type: 'POST',
-                    url: '/automobiles',
+                    type: 'PUT',
+                    url: "/automobiles/"+id,
                     data: {
                         '_token': $('input[name=_token]').val(),
                         'name': $("#name").val(),

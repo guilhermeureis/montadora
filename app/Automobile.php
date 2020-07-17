@@ -15,4 +15,9 @@ class Automobile extends Model
     {
         return $this->belongsTo('App\Branch');
     }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Category');
+    }
 }
