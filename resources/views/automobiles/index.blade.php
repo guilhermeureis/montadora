@@ -8,9 +8,10 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
-        <div class="box box-primary">
-            <div class="box-header">
+    <div class="col-12">
+        <div class="card">
+            <!-- /.card-header -->
+            <div class="card-body">
                 <div class="class-md-4">
                     <button type="button" id="btn-new-automobile" class="btn btn-secondary"><i class="fas fa-plus" aria-hidden="true"></i> Novo Automóvel</button>
                 </div>
@@ -31,14 +32,14 @@
                         <tbody>
                             @foreach($automobiles as $list)
                                 <tr>                                   
-                                    <td width="25%" class="show-automobile"><a href="#" data-name="{{$list->name}}"
-                                                                data-branch="{{$list->branch->name}}"
-                                                                data-year="{{$list->year}}"
-                                                                data-model="{{$list->model}}"
-                                                                data-color="{{$list->color}}"
-                                                                data-chassi_number="{{$list->chassi_number}}"
-                                                                data-category="{{$list->category->category}}"
-                                                                 >{{$list->name}}</a></td>
+                                    <td width="25%" class="show-automobile" data-name="{{$list->name}}"
+                                                                            data-branch="{{$list->branch->name}}"
+                                                                            data-year="{{$list->year}}"
+                                                                            data-model="{{$list->model}}"
+                                                                            data-color="{{$list->color}}"
+                                                                            data-chassi_number="{{$list->chassi_number}}"
+                                                                            data-category="{{$list->category->category}}">
+                                                                            <a href="#">{{$list->name}}</a></td>
                                     <td class="text-center show-automobile" width="25%" data-name="{{$list->name}}"
                                                                         data-branch="{{$list->branch->name}}"
                                                                         data-year="{{$list->year}}"

@@ -11,7 +11,7 @@
     <div class="col-md-12">
     <div class="card card-secondary">
        <div class="card-header">
-          <h3 class="card-title">Filial</h3>
+          <h3 class="card-title">Editar Filial</h3>
        </div>
        <form>
           <div class="card-body">

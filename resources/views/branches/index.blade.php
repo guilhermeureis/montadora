@@ -8,9 +8,10 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
-        <div class="box box-primary">
-            <div class="box-header">
+    <div class="col-12">
+        <div class="card">
+        <!-- /.card-header -->
+            <div class="card-body">
                 <div class="class-md-4">
                     <button type="button" id="btn-new-branch" class="btn btn-secondary"><i class="fas fa-plus" aria-hidden="true"></i> Nova Filial</button>
                 </div>
@@ -213,7 +214,8 @@
                 } else {
                     swal("Cancelado!","Operação cancelada com sucesso!","info");
                 }
-          });   
+          });
+        });
     
     </script>
 @stop

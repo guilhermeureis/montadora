@@ -27,4 +27,9 @@ class Employee extends Authenticatable
     {
         return $this->belongsTo('App\Branch');
     }
+
+    public function gender()
+    {
+        return $this->belongsTo('App\Gender');
+    }
 }

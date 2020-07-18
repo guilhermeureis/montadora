@@ -3,7 +3,7 @@
 @section('title', 'Novo Funcionário')
 
 @section('content_header')
-    <h1>Novo Funcionário</h1>
+    <h1>Editar Funcionário</h1>
 @stop
 
 @section('content')
@@ -11,7 +11,7 @@
     <div class="col-md-12">
     <div class="card card-secondary">
        <div class="card-header">
-          <h3 class="card-title">Funcionário</h3>
+          <h3 class="card-title">Editar Funcionário</h3>
        </div>
        <form role="form">
           <div class="card-body">
@@ -19,39 +19,43 @@
                   <div class="col-md-8">
                     <div class="form-group">
                         <label for="name">Nome</label>
-                        <input type="text" class="form-control" id="name" name="name">
+                        <input type="text" class="form-control" id="name" name="name" value="{{$employee->name}}">
                      </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                         <label for="birthday">Data de Nascimento</label>
-                        <input type="date" class="form-control" id="birthday" name="birthday">
+                        <input type="date" class="form-control" id="birthday" name="birthday" value="{{$employee->birthday}}">
                      </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                     <label>Filial</label>
                     <select class="form-control select2" style="width: 100%;" id="branch_id" name="branch_id">
-                        <option value="" selected="selected">Escolha uma opção</option>
-                            @foreach($branches as $list)
+                    <option value="{{$employee->branch->id}}" selected="selected">{{$employee->branch->name}}</option>
+                        @foreach($branches as $list)
+                            @if ($list->id != $employee->branch->id) 
                                 <option value="{{$list->id}}">{{$list->name}}</option>
-                            @endforeach
+                            @endif
+                        @endforeach
                     </select>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                         <label for="full_address">Endereço Completo</label>
-                        <input type="text" class="form-control" id="full_address" name="full_address">
+                        <input type="text" class="form-control" id="full_address" name="full_address" value="{{$employee->full_address}}">
                      </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                     <label>Gênero</label>
                     <select class="form-control select2" style="width: 100%;" id="gender_id" name="gender_id">
-                        <option value="" selected="selected">Escolha uma opção</option>
+                        <option value="{{$employee->gender->id}}" selected="selected">{{$employee->gender->gender}}</option>
                             @foreach($genders as $list)
-                                <option value="{{$list->id}}">{{$list->gender}}</option>
+                                @if ($list->id != $employee->gender->id)
+                                    <option value="{{$list->id}}">{{$list->gender}}</option>
+                                @endif
                             @endforeach
                     </select>
                     </div>
@@ -59,47 +63,51 @@
                   <div class="col-md-4">
                     <div class="form-group">
                         <label for="cpf">CPF</label>
-                        <input type="text" class="form-control" id="cpf" name="cpf">
+                        <input type="text" class="form-control" id="cpf" name="cpf" value="{{$employee->cpf}}">
                      </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                     <label>Situação</label>
                     <select class="form-control select2" style="width: 100%;" id="status" name="status">
-                        <option value="" selected="selected">Escolha uma opção</option>
-                        <option value="1">ATIVO</option>
-                        <option value="0">INATIVO</option>
+                        @if ($employee->status == 1)
+                            <option value="1" selected="selected">ATIVO</option>
+                            <option value="0">INATIVO</option>
+                        @else
+                            <option value="0" selected="selected">INATIVO</option>
+                            <option value="1">ATIVO</option>
+                        @endif
                     </select>
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                         <label for="role">Cargo</label>
-                        <input type="text" class="form-control" id="role" name="role">
+                        <input type="text" class="form-control" id="role" name="role" value="{{$employee->role}}">
                      </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                         <label for="amount">Salário</label>
-                        <input type="float" class="form-control" id="amount" name="amount">
+                        <input type="float" class="form-control" id="amount" name="amount" value="{{$employee->amount}}">
                      </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="text" class="form-control" id="password" name="password" disabled>
+                        <input type="password" class="form-control" id="password" name="password" disabled>
                      </div>
                   </div>
                   <div class="col-md-2">
                     <div class="form-group">
                         <label for="password">Automático</label>
-                        <button type="submit" class="btn btn-block btn-success" id="gerar_password">Gerar Senha</button>
+                        <button type="submit" class="btn btn-block btn-success" id="gerar_password">Gerar Nova Senha</button>
                      </div>
                   </div>
               </div>
           </div>
           <div class="card-footer">
-             <button type="submit" class="btn btn-primary" id="salvar-employees">Salvar</button>
+             <button type="submit" class="btn btn-primary" id="editar-employees" data-id="{{$employee->id}}">Editar</button>
           </div>
        </form>
     </div>
@@ -154,14 +162,16 @@
             return Math.random().toString(36).slice(-6);
         }
 
-        $('#salvar-employees').on('click',function (e) {
+        $('#editar-employees').on('click',function (e) {
             e.preventDefault();
             var amount = $("#amount").maskMoney('unmasked')[0] == 0 ? null : $("#amount").maskMoney('unmasked')[0];
+            var id = $(this).data('id');
             $.ajax({
-                    type: 'POST',
-                    url: '/employees',
+                    type: 'PUT',
+                    url: "/employees/"+id,
                     data: {
                         '_token': $('input[name=_token]').val(),
+                        'id': id,
                         'name': $("#name").val(),
                         'branch_id': $("#branch_id").val(),
                         'birthday': $("#birthday").val(),
@@ -171,7 +181,7 @@
                         'role': $("#role").val(),
                         'amount': amount,
                         'status': $("#status").val(),
-                        'password': $("#password    ").val()
+                        'password': $("#password").val()
                     },
                     beforeSend: function() {
                         $('#carregamento').modal('show');
@@ -237,11 +247,6 @@
                             if (dados.errors.status) {
                                 var linha_nova = dados.errors.status.toString();
                                 var linha = linha_nova.replace("O campo status", "Situação");
-                                erro = erro + "-> " + linha + "\n";
-                            }
-                            if (dados.errors.password) {
-                                var linha_nova = dados.errors.password.toString();
-                                var linha = linha_nova.replace("O campo password", "Senha");
                                 erro = erro + "-> " + linha + "\n";
                             }
                         }
