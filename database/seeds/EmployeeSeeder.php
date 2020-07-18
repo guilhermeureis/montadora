@@ -22,7 +22,7 @@ class EmployeeSeeder extends Seeder
         $employee->role = 'Diretor Geral';
         $employee->amount = 20000.00;
         $employee->status = 1;
-        $employee->password = bcrypt('a1b2C3');
+        $employee->password = bcrypt('abc123');
         $employee->save();
     }
 }

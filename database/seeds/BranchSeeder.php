@@ -18,5 +18,12 @@ class BranchSeeder extends Seeder
         $branch->state_registration = '318571049798';
         $branch->cnpj = '67.497.731/0001-65';
         $branch->save();
+
+        $branch = new Branch();
+        $branch->name = 'Filial 1';
+        $branch->full_address = 'Rua Linhares, 15. Centro. Vitória.';
+        $branch->state_registration = '318571049798';
+        $branch->cnpj = '23.257.088/0001-27';
+        $branch->save();
     }
 }
